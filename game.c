@@ -17,14 +17,12 @@ int main(int argc, char *argv[]){
   int i,j;
   char nextWorld[nRows][nCols];
   int wTime = 0;
-  
   for (i = 0; i < nRows; i++){
     for (j = 0; j < nCols; j++){
-      world[i][j] = DEAD;//TODO change to space
+      world[i][j] = DEAD;
       nextWorld[i][j] = DEAD;
     }
   }
-  
   for (i = 1; i < argc; i+=2){
     int p = atoi(argv[i]);
     if (p >= nCols) p = p - nCols;
@@ -40,7 +38,6 @@ int main(int argc, char *argv[]){
     for (i = 0; i < nRows; i++){
       for (j = 0; j < nCols; j++){
         char current = world[i][j];
-        
         if(current == LIFE){
           if (countLivingNeigbours(j, i) == 0 || countLivingNeigbours(j, i) == 1) nextWorld[i][j] = DEAD;
           else if (countLivingNeigbours(j, i) == 2 || countLivingNeigbours(j, i) == 3) nextWorld[i][j] = LIFE;
@@ -50,7 +47,7 @@ int main(int argc, char *argv[]){
       }
     }
     memcpy(world, nextWorld, sizeof(char)*nRows*nCols);
-    memset(nextWorld, (int)DEAD, sizeof(char)*nRows*nCols);//TODO just checking
+    memset(nextWorld, (int)DEAD, sizeof(char)*nRows*nCols);
     printf("Time: %d\n", ++wTime);
     usleep(83333);
   }
@@ -69,14 +66,13 @@ void printWorld(){
 
 int countLivingNeigbours(int x, int y){
   int result = 0;
-  int startX = (x - 1 < 0) ? -1: x-1, endX = (x + 1 >= nCols) ? -1: x+1;
-  int startY = (y - 1 < 0) ? -1: y-1, endY = (y + 1 >= nRows) ? -1: y+1;
   int i = 0, j = 0;
-  // printf("x: %d, y: %d\n", x, y);
-  for (i=startY; i <= endY; i++){
-    for (j=startX; j <= endX; j++){
-      if (!(i== y && j == x) && i != -1 && j != -1){
-        if (world[i][j] == LIFE) {result++;}
+  for (i=y-1; i <= y+1; i++){
+    for (j=x-1; j <= x+1; j++){
+      if (!(i== y && j == x)){
+        int a = (i < 0) ? i + nRows : i;
+        int b = (j < 0) ? j + nCols : j;
+        if (world[a%nRows][b%nCols] == LIFE) {result++;}
       }
     }
   }
