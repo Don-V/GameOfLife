@@ -7,7 +7,6 @@
 
 void printWorld();
 int countLivingNeigbours(int x, int y);
-int checkForLife();
 
 char world[nRows][nCols];
 const char LIFE = 'O';
@@ -17,6 +16,8 @@ int main(int argc, char *argv[]){
   int i,j;
   char nextWorld[nRows][nCols];
   int wTime = 0;
+  int thereIsLife = (argc >= 3);
+
   for (i = 0; i < nRows; i++){
     for (j = 0; j < nCols; j++){
       world[i][j] = DEAD;
@@ -24,26 +25,30 @@ int main(int argc, char *argv[]){
     }
   }
   for (i = 1; i < argc; i+=2){
-    int p = atoi(argv[i]);
-    if (p >= nCols) p = p - nCols;
-    else if (p < 0) p = nCols + p;
-    int q = atoi(argv[i+1]);
-    if (q >= nRows) q = q - nRows;
-    else if (q < 0) q = nRows + q;
+    int p = atoi(argv[i])%nCols;
+    if (p < 0) p = nCols + p;
+    int q = atoi(argv[i+1])%nCols;
+    if (q < 0) q = nRows + q;
     world[q][p] = LIFE;
   }
   
-  while(checkForLife()){
+  while(thereIsLife){
     printWorld();
+    thereIsLife = 0;
     for (i = 0; i < nRows; i++){
       for (j = 0; j < nCols; j++){
         char current = world[i][j];
         if(current == LIFE){
           if (countLivingNeigbours(j, i) == 0 || countLivingNeigbours(j, i) == 1) nextWorld[i][j] = DEAD;
-          else if (countLivingNeigbours(j, i) == 2 || countLivingNeigbours(j, i) == 3) nextWorld[i][j] = LIFE;
-          else if (countLivingNeigbours(j, i) == 4) nextWorld[i][j] = DEAD;
+          else if (countLivingNeigbours(j, i) == 2 || countLivingNeigbours(j, i) == 3){
+            nextWorld[i][j] = LIFE;
+            thereIsLife = 1;
+          }else if (countLivingNeigbours(j, i) == 4) nextWorld[i][j] = DEAD;
         }
-        else if(current == DEAD && countLivingNeigbours(j, i) == 3) nextWorld[i][j] = LIFE;
+        else if(current == DEAD && countLivingNeigbours(j, i) == 3){
+            nextWorld[i][j] = LIFE;
+            thereIsLife = 1;
+          }
       }
     }
     memcpy(world, nextWorld, sizeof(char)*nRows*nCols);
@@ -77,14 +82,4 @@ int countLivingNeigbours(int x, int y){
     }
   }
   return result;
-}
-
-int checkForLife(){
-  int i = 0, j = 0;
-  for (i = 0; i < nRows; i++){
-    for (j = 0; j < nCols; j++){
-      if (world[i][j] == LIFE) return 1;
-    }
-  }
-  return 0;
 }
