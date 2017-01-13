@@ -47,13 +47,12 @@ int main(int argc, char *argv[]){
           else if (countLivingNeigbours(j, i) == 4) nextWorld[i][j] = DEAD;
         }
         else if(current == DEAD && countLivingNeigbours(j, i) == 3) nextWorld[i][j] = LIFE;
-        // printf("i j: %d %d\n", i, j);
       }
     }
     memcpy(world, nextWorld, sizeof(char)*nRows*nCols);
-    memset(nextWorld, 0, sizeof(char)*nRows*nCols);//TODO change 32 to an ascii change
+    memset(nextWorld, (int)DEAD, sizeof(char)*nRows*nCols);//TODO just checking
     printf("Time: %d\n", ++wTime);
-    usleep(83333/3000);
+    usleep(83333);
   }
   return 0;
 }
@@ -77,14 +76,12 @@ int countLivingNeigbours(int x, int y){
   for (i=startY; i <= endY; i++){
     for (j=startX; j <= endX; j++){
       if (!(i== y && j == x) && i != -1 && j != -1){
-        if (world[i][j] == LIFE) {result++;/*world[i][j] = 'X';*/}//TODO reduce
+        if (world[i][j] == LIFE) {result++;}
       }
     }
   }
   return result;
 }
-
-// printf("world[%d][%d] = %c\n", i, j, world[j][i]);
 
 int checkForLife(){
   int i = 0, j = 0;
