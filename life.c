@@ -13,9 +13,8 @@ const char LIFE = 'O';
 const char DEAD = ' ';
 
 int main(int argc, char *argv[]){
-  int i,j;
+  int i,j, wTime = 0;
   char nextWorld[nRows][nCols];
-  int wTime = 0;
   int thereIsLife = (argc >= 3);
 
   for (i = 0; i < nRows; i++){
@@ -43,7 +42,7 @@ int main(int argc, char *argv[]){
           else if (countLivingNeigbours(j, i) == 2 || countLivingNeigbours(j, i) == 3){
             nextWorld[i][j] = LIFE;
             thereIsLife = 1;
-          }else if (countLivingNeigbours(j, i) == 4) nextWorld[i][j] = DEAD;
+          }else if (countLivingNeigbours(j, i) >= 4) nextWorld[i][j] = DEAD;
         }
         else if(current == DEAD && countLivingNeigbours(j, i) == 3){
             nextWorld[i][j] = LIFE;
@@ -62,22 +61,19 @@ int main(int argc, char *argv[]){
 void printWorld(){
   int i = 0, j = 0;
   for (i = 0; i < nRows; i++){
-    for (j = 0; j < nCols; j++){
-      printf("%c", world[i][j]);
-    }
+    for (j = 0; j < nCols; j++) printf("%c", world[i][j]);
     printf("\n");
   }
 }
 
 int countLivingNeigbours(int x, int y){
-  int result = 0;
-  int i = 0, j = 0;
+  int i = 0, j = 0, result = 0;
   for (i=y-1; i <= y+1; i++){
     for (j=x-1; j <= x+1; j++){
       if (!(i== y && j == x)){
         int a = (i < 0) ? i + nRows : i;
         int b = (j < 0) ? j + nCols : j;
-        if (world[a%nRows][b%nCols] == LIFE) {result++;}
+        if (world[a%nRows][b%nCols] == LIFE) result++;
       }
     }
   }
