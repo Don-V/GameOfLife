@@ -1,9 +1,7 @@
 # GameOfLife
 
 **This is the Conway's Game Of Life that I implemeted in C.**
-
 * The game has the following specifications:
-
 * It is played on an 80x24 cell world
 * A 'O' represents life on a cell while a ' ' represents a dead cell
 * Living cells are specified by adding their x,y co-ordinates to the command line arguments
